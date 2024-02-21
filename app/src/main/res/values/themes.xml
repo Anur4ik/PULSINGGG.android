@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.PULSINGGG" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="android:statusBarColor">#344B6B</item>
+    </style>
+
+    <style name="Theme.PULSINGGG" parent="Base.Theme.PULSINGGG" />
+
+    <style name="Theme.PULSINGGG.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.PULSINGGG.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.PULSINGGG.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

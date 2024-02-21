@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/audiowide</item>
+        <item>@font/comic_neue_bold</item>
+        <item>@font/comic_neue_bold_italic</item>
+        <item>@font/metal_mania</item>
+        <item>@font/ruslan_display</item>
+        <item>@font/sonsie_one</item>
+    </array>
+</resources>

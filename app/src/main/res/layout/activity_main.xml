@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="506dp"
+        android:layout_height="1267dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/_23"
+        tools:layout_editor_absoluteX="-58dp"
+        tools:layout_editor_absoluteY="-408dp" />
+
+    <ImageButton
+
+        android:id="@+id/Button_heart"
+        android:layout_width="311dp"
+        android:layout_height="251dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="28dp"
+        android:background="#00FFFFFF"
+        android:clickable="true"
+        android:onClick="Press_heart"
+        android:scaleType="fitCenter"
+        android:src="@drawable/red_heart_emoji_1024x940_vu513k96"
+        android:stateListAnimator="@android:anim/fade_out"
+        android:text="Loading..."
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/statis1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="88dp"
+        android:fontFamily="@font/comic_neue_bold"
+        android:text="BPM"
+        android:textColor="#FFFEFE"
+        android:textSize="30sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/Time" />
+
+    <TextView
+        android:id="@+id/Time"
+        android:layout_width="114dp"
+        android:layout_height="57dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="68dp"
+        android:fontFamily="@font/comic_neue_bold"
+        android:text="--:--"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/statis"
+        android:layout_width="60dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="-10dp"
+        android:layout_marginBottom="-60dp"
+        android:src="@drawable/red_outline_heart_h6z"
+        app:layout_constraintBottom_toTopOf="@+id/Pulse_data"
+        app:layout_constraintStart_toEndOf="@+id/Pulse_data" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="379dp"
+        android:layout_height="117dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="-40dp"
+        android:fontFamily="@font/comic_neue_bold"
+        android:text="Остання перевірка "
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/Pulse_data"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/data"
+        android:layout_width="185dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="124dp"
+        android:fontFamily="@font/comic_neue_bold"
+        android:text="  --.--.----"
+        android:textAlignment="textStart"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        android:textStyle="bold|italic"
+        android:typeface="serif"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textHome"
+        app:layout_constraintVertical_bias="0.968" />
+
+    <TextView
+        android:id="@+id/Pulse_data"
+        android:layout_width="113dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="124dp"
+        android:fontFamily="@font/comic_neue_bold_italic"
+        android:lineSpacingExtra="34sp"
+        android:text="---"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="60sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/ProgressBar2"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="88dp"
+        android:layout_height="97dp"
+        android:layout_marginStart="-205dp"
+        android:layout_marginBottom="-180dp"
+        android:indeterminateBehavior="repeat"
+        android:mirrorForRtl="false"
+        android:progressDrawable="@color/white"
+        android:progressTint="#FD0606"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/Button_heart"
+        app:layout_constraintStart_toEndOf="@+id/Button_heart" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-280dp"
+        android:layout_marginEnd="-340dp"
+        android:fontFamily="serif-monospace"
+        android:text="Виміряти пульс"
+        android:textColor="#F83434"
+        android:textSize="34sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="485dp"
+        android:layout_height="319dp"
+        app:srcCompat="@drawable/_66fe4c31fb0e151a5159a3a"
+        tools:layout_editor_absoluteX="-3dp"
+        tools:layout_editor_absoluteY="-31dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="437dp"
+        android:layout_height="79dp"
+        android:background="#0B0915"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/B_home"
+            android:layout_width="173dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#5E4A148C"
+            android:lineSpacingExtra="0sp"
+            android:paddingTop="-15dp"
+            android:paddingBottom="-25sp"
+            android:text="Пульс"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="#E6D1D1"
+            android:textSize="34sp"
+            app:cornerRadius="50dp"
+            app:iconTint="#FF0C0C"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:strokeColor="#000000" />
+
+        <Button
+            android:id="@+id/history"
+            android:layout_width="173dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#00595956"
+            android:lineSpacingExtra="0sp"
+            android:onClick="NextPage"
+            android:paddingTop="-15dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="-20sp"
+            android:text="Історія"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="#E6D1D1"
+            android:textSize="34sp"
+            app:cornerRadius="50dp"
+            app:iconTint="#FF0C0C"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:strokeColor="#000000" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
