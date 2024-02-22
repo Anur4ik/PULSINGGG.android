@@ -1,5 +1,6 @@
 package com.example.pulsinggg;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,9 +11,13 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -25,9 +30,12 @@ import java.util.Locale;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private final int ENABLE_REQUEST = 15;
+    private BluetoothAdapter blueAdapt;
     ConstraintLayout lay;
     ImageButton Button_heart;
     ProgressBar ProgressBar2;
+    ImageView Blutooth1;
     TextView Pulse_data;
     TextView data;
     TextView Time;
@@ -36,10 +44,22 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_DATA = "data_key";
     private static final String KEY_TIME = "time_key";
     public static final String SHARED_PREFS_FILE = "MyAppSharedPrefs";
-
     // Массив для хранения предыдущих чисел пульса
     public static ArrayList<String> previousNumbersList = new ArrayList<>();
 
+    private final ActivityResultLauncher<Intent> bluetoothEnableLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    // Bluetooth включен успешно
+                    Toast.makeText(this, "Bluetooth включен", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Пользователь отменил включение Bluetooth
+                    Toast.makeText(this, "Включение Bluetooth отменено", Toast.LENGTH_SHORT).show();
+                }
+                // Обновляем иконку Bluetooth
+                setBtIcon();
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +70,14 @@ public class MainActivity extends AppCompatActivity {
         Pulse_data = findViewById(R.id.Pulse_data);
         data = findViewById(R.id.data);
         Time = findViewById(R.id.Time);
+        Blutooth1 = findViewById(R.id.Blutooth1);
         ProgressBar2 = findViewById(R.id.ProgressBar2);
 
         // Инициализация массива для хранения предыдущих чисел пульса
         previousNumbersList = new ArrayList<>();
+
+        // Инициализация BluetoothAdapter
+        blueAdapt = BluetoothAdapter.getDefaultAdapter();
 
         // Загрузка сохраненных значений из SharedPreferences
         SharedPreferences sharedPrefs = getSharedPreferences(SHARED_PREFS_FILE, Context.MODE_PRIVATE);
@@ -68,12 +92,47 @@ public class MainActivity extends AppCompatActivity {
             String[] previousNumbersArray = previousNumbersString.split(",");
             previousNumbersList.addAll(Arrays.asList(previousNumbersArray));
         }
+        setBtIcon();
     }
+
+    // Метод для установки иконки Bluetooth в зависимости от состояния
+    private void setBtIcon() {
+        if (blueAdapt.isEnabled()) {
+            Blutooth1.setImageResource(R.drawable.bt_on);
+        } else {
+            Blutooth1.setImageResource(R.drawable.bt_dith);
+        }
+    }
+
+    public void Blutoth_Menu(View view){
+        Intent open = new Intent(MainActivity.this,Option_Blu.class);
+        startActivity(open);
+    }
+    public void Blutooth_Click(View view) {
+        if (blueAdapt == null) {
+            // Устройство не поддерживает Bluetooth
+            Toast.makeText(this, "Bluetooth не поддерживается на этом устройстве", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!blueAdapt.isEnabled()) {
+            // Если Bluetooth выключен, включаем его
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            bluetoothEnableLauncher.launch(enableBtIntent);
+        } else {
+            // Если Bluetooth включен, выключаем его
+            blueAdapt.disable();
+            // Устанавливаем соответствующую иконку
+            Blutooth1.setImageResource(R.drawable.bt_dith);
+        }
+    }
+
     protected void onDestroy() {
         super.onDestroy();
         // Очистка массива предыдущих чисел перед уничтожением активности
         previousNumbersList.clear();
     }
+
     public void Press_heart(View view) {
         final ColorStateList originalColor = Button_heart.getImageTintList();
         Button_heart.setImageTintList(ColorStateList.valueOf(Color.BLACK));
@@ -120,3 +179,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 }
+

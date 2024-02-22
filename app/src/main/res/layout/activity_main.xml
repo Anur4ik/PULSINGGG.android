@@ -212,4 +212,26 @@
             app:strokeColor="#000000" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/Blutooth1"
+        android:layout_width="109dp"
+        android:layout_height="122dp"
+        android:layout_marginStart="-344dp"
+        android:layout_marginBottom="-220dp"
+        android:onClick="Blutooth_Click"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:srcCompat="@drawable/bt_dith" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="79dp"
+        android:layout_height="79dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-200dp"
+        android:onClick="Blutoth_Menu"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/Blutooth1"
+        app:srcCompat="@drawable/build" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
