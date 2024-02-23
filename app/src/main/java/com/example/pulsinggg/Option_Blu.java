@@ -1,11 +1,14 @@
 package com.example.pulsinggg;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.BLUETOOTH_SCAN;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -15,11 +18,12 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pulsinggg.adapter.BtAdapter;
-import com.example.pulsinggg.adapter.BtConst;
 import com.example.pulsinggg.adapter.ListItem;
 
 import java.util.ArrayList;
@@ -33,27 +37,51 @@ public class Option_Blu extends AppCompatActivity {
     private BtAdapter adapter;
     private BluetoothAdapter blueAdapt;
     private boolean isBtPermissionGranted = false;
+    private boolean isDiscovery = false;
+    private TextView ab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_option_blu);
+        ab = findViewById(R.id.textView3);
         init();
         getBtPermission();
 
     }
 
     public void resume_main(View v) {
+        if (isDiscovery) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            blueAdapt.cancelDiscovery();
+        isDiscovery=false;
+        }
+        else {
         finish();
+        }
     }
 
-    public void search(View v) {
+    public boolean search(View v) {
+        if(isDiscovery)return true;
+        ab.setText(R.string.Discovery);
+        list.clear();
         ListItem itemTitle = new ListItem();
         itemTitle.setItemType(BtAdapter.TITLE_ITEM_TYPE);
         list.add(itemTitle);
         adapter.notifyDataSetChanged();
         blueAdapt.startDiscovery();
+        isDiscovery=true;
 
+        return true;
     }
 
     private void init() {
@@ -63,8 +91,18 @@ public class Option_Blu extends AppCompatActivity {
         adapter = new BtAdapter(this, R.layout.bt_listitem, list);
         listView.setAdapter(adapter);
         getPairedDevices();
+        onItemClickLisener();
     }
+private void onItemClickLisener(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+             ListItem item=(ListItem) parent.getItemAtPosition(position);
+             if(item.getItemType().equals(BtAdapter.DISCOVERY_ITEM_TYPE)) item.getBtDevice().createBond();
 
+            }
+        });
+        }
     private void getPairedDevices() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -109,8 +147,10 @@ public class Option_Blu extends AppCompatActivity {
         super.onResume();
         IntentFilter f1 = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         IntentFilter f2 = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        IntentFilter f3 = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(bReciever, f1);
         registerReceiver(bReciever, f2);
+        registerReceiver(bReciever, f3);
     }
 
     @Override
@@ -129,7 +169,17 @@ public class Option_Blu extends AppCompatActivity {
                 item.setItemType(BtAdapter.DISCOVERY_ITEM_TYPE);
                 list.add(item);
                 adapter.notifyDataSetChanged();
-                Toast.makeText(context, "Знайдено невий пристрій " + device.getName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Знайдено невий пристрій " + device.getName(), Toast.LENGTH_SHORT).show();
+            } else if (
+                    BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(intent.getAction())) {
+                isDiscovery=false;
+                getPairedDevices();
+                ab.setText("");
+
+            } else if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(intent.getAction())) {
+                BluetoothDevice device=intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if(device.getBondState()==BluetoothDevice.BOND_BONDED){getPairedDevices();}
+                
             }
         }
     };
