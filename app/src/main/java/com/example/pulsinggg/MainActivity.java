@@ -1,9 +1,11 @@
 package com.example.pulsinggg;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,7 +33,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import android.Manifest;
+
 public class MainActivity extends AppCompatActivity {
+    private static final int REQUEST_ENABLE_BT = 1;
     private final int ENABLE_REQUEST = 15;
     private BluetoothAdapter blueAdapt;
     ConstraintLayout lay;
@@ -63,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        checkBluetoothPermissions();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lay = findViewById(R.id.lay);
@@ -95,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         setBtIcon();
     }
 
-    // Метод для установки иконки Bluetooth в зависимости от состояния
     private void setBtIcon() {
         if (blueAdapt.isEnabled()) {
             Blutooth1.setImageResource(R.drawable.bt_on);
@@ -104,10 +111,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void Blutoth_Menu(View view){
-        Intent open = new Intent(MainActivity.this,Option_Blu.class);
-        startActivity(open);
+    private void checkBluetoothPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Разрешение не предоставлено, запросите его
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.BLUETOOTH},
+                    REQUEST_ENABLE_BT);
+        }
     }
+
+    public void Blutoth_Menu(View view) {
+        if(blueAdapt.isEnabled()){
+        Intent open = new Intent(MainActivity.this, Option_Blu.class);
+        startActivity(open);
+
+        }
+        else {
+            Toast.makeText(this, "Блютуз виключен", Toast.LENGTH_SHORT).show();
+        }}
+
     public void Blutooth_Click(View view) {
         if (blueAdapt == null) {
             // Устройство не поддерживает Bluetooth
@@ -120,10 +143,10 @@ public class MainActivity extends AppCompatActivity {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             bluetoothEnableLauncher.launch(enableBtIntent);
         } else {
-            // Если Bluetooth включен, выключаем его
-            blueAdapt.disable();
+            Toast.makeText(this," Король знайшовся, йди вручну виключай", Toast.LENGTH_SHORT).show();
+            // blueAdapt.disable();
             // Устанавливаем соответствующую иконку
-            Blutooth1.setImageResource(R.drawable.bt_dith);
+
         }
     }
 

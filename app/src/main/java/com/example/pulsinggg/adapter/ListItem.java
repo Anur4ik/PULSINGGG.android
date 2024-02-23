@@ -1,30 +1,29 @@
 package com.example.pulsinggg.adapter;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 
-import java.util.Set;
-
 public class ListItem {
-    private  String btName;
-    private  String btMac;
+    private BluetoothDevice btDevice;
 
-
-    public void setBtName(String btName) {
-        this.btName = btName;
+    public BluetoothDevice getBtDevice() {
+        return btDevice;
     }
 
-    public void setBtMac(String btMac) {
-        this.btMac = btMac;
+    public void setBtDevice(BluetoothDevice btDevice) {
+        this.btDevice = btDevice;
     }
 
-    public String getBtName() {
-        return btName;
+    private  String itemType=BtAdapter.DEF_ITEM_TYPE;
+
+    public String getItemType() {
+        return itemType;
     }
 
-    public String getBtMac() {
-        return btMac;
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
     }
+
+
 
 
 
