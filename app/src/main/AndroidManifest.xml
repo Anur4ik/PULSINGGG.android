@@ -25,11 +25,7 @@
         <activity
             android:name=".Option_Blu"
             android:exported="false" />
-        <activity
-            android:name=".ScrollingActivity"
-            android:exported="false"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/Theme.PULSINGGG.NoActionBar" />
+        <activity android:name=".history_page" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -53,13 +53,6 @@ public class Option_Blu extends AppCompatActivity {
     public void resume_main(View v) {
         if (isDiscovery) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             blueAdapt.cancelDiscovery();
@@ -125,7 +118,7 @@ private void onItemClickLisener(){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 isBtPermissionGranted = true;
             } else {
-                Toast.makeText(this, "Нет разрешения", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Немає дозволу", Toast.LENGTH_SHORT).show();
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -169,7 +162,6 @@ private void onItemClickLisener(){
                 item.setItemType(BtAdapter.DISCOVERY_ITEM_TYPE);
                 list.add(item);
                 adapter.notifyDataSetChanged();
-                //Toast.makeText(context, "Знайдено невий пристрій " + device.getName(), Toast.LENGTH_SHORT).show();
             } else if (
                     BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(intent.getAction())) {
                 isDiscovery=false;

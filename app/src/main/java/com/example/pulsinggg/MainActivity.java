@@ -1,6 +1,5 @@
 package com.example.pulsinggg;
 
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,7 +26,6 @@ import androidx.core.content.ContextCompat;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -44,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private final int ENABLE_REQUEST = 15;
     private BluetoothAdapter blueAdapt;
     private Connection connection;
+    private  ReceiveThread receiveThread;
     ConstraintLayout lay;
     ImageButton Button_heart;
     ProgressBar ProgressBar2;
@@ -51,13 +49,8 @@ public class MainActivity extends AppCompatActivity {
     TextView Pulse_data;
     TextView data;
     TextView Time;
-    String now_number = "0";
-    private static final String KEY_NUMBER = "number_key";
-    private static final String KEY_DATA = "data_key";
-    private static final String KEY_TIME = "time_key";
-    public static final String SHARED_PREFS_FILE = "MyAppSharedPrefs";
-    // Массив для хранения предыдущих чисел пульса
-    public static ArrayList<String> previousNumbersList = new ArrayList<>();
+    TextView static1;
+    String Number_Pulse = "0";
 
     private final ActivityResultLauncher<Intent> bluetoothEnableLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -72,10 +65,11 @@ public class MainActivity extends AppCompatActivity {
                 // Обновляем иконку Bluetooth
                 setBtIcon();
             });
-    private SharedPreferences pref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         checkBluetoothPermissions();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -83,32 +77,50 @@ public class MainActivity extends AppCompatActivity {
         Button_heart = findViewById(R.id.Button_heart);
         Pulse_data = findViewById(R.id.Pulse_data);
         data = findViewById(R.id.data);
+        static1= findViewById(R.id.statis1);
         Time = findViewById(R.id.Time);
         Blutooth1 = findViewById(R.id.Blutooth1);
         ProgressBar2 = findViewById(R.id.ProgressBar2);
-init();
-        // Инициализация массива для хранения предыдущих чисел пульса
-        previousNumbersList = new ArrayList<>();
-        // Загрузка сохраненных значений из SharedPreferences
-        SharedPreferences sharedPrefs = getSharedPreferences(SHARED_PREFS_FILE, Context.MODE_PRIVATE);
-        now_number = sharedPrefs.getString(KEY_NUMBER, "0");
-        Pulse_data.setText(now_number);
-        data.setText(sharedPrefs.getString(KEY_DATA, "--.--.----"));
-        Time.setText(sharedPrefs.getString(KEY_TIME, "--:--"));
-
-        // Загрузка истории чисел пульса из SharedPreferences
-        String previousNumbersString = sharedPrefs.getString("previous_numbers", "");
-        if (!previousNumbersString.isEmpty()) {
-            String[] previousNumbersArray = previousNumbersString.split(",");
-            previousNumbersList.addAll(Arrays.asList(previousNumbersArray));
-        }
+        init();
+        init_list();
         setBtIcon();
+        init_p();
+
     }
+    protected void onResume() {
+        super.onResume();
+
+        // Ensure that the ArrayLists are initialized before clearing them
+        if (Pulse != null) {
+            Pulse.clear();
+        } else {
+            Pulse = new ArrayList<>();
+        }
+        if (Data != null) {
+            Data.clear();
+        } else {
+            Data = new ArrayList<>();
+        }
+        if (time != null) {
+            time.clear();
+        } else {
+            time = new ArrayList<>();
+        }
+    }
+    private SharedPreferences pref;
+    private SharedPreferences DATE;
     private  void init(){
         blueAdapt = BluetoothAdapter.getDefaultAdapter();
         pref=getSharedPreferences(BtConst.MY_PREF,Context.MODE_PRIVATE);
         connection=new Connection(this);
+
     }
+private void init_list(){
+    Pulse = new ArrayList<>();
+    Data = new ArrayList<>();
+    time = new ArrayList<>();
+}
+
 
     private void setBtIcon() {
         if (blueAdapt.isEnabled()) {
@@ -127,44 +139,13 @@ init();
                     REQUEST_ENABLE_BT);
         }
     }
-
-    public void Blutoth_Menu(View view) {
-        if(blueAdapt.isEnabled()){
-        Intent open = new Intent(MainActivity.this, Option_Blu.class);
-        startActivity(open);
-
-        }
-        else {
-            Toast.makeText(this, "Блютуз виключен", Toast.LENGTH_SHORT).show();
-        }}
-
-    public void Blutooth_Click(View view) {
-        if (blueAdapt == null) {
-            Toast.makeText(this, "Bluetooth не поддерживается на этом устройстве", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!blueAdapt.isEnabled()) {
-            // Если Bluetooth выключен, включаем его
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            bluetoothEnableLauncher.launch(enableBtIntent);
-        } else {
-            Toast.makeText(this," Король знайшовся, йди вручну виключай", Toast.LENGTH_SHORT).show();
-        }
-    }
-    public void Bluetooth_Connection(View v){
-connection.connect();
-    }
-
-    protected void onDestroy() {
-        super.onDestroy();
-        // Очистка массива предыдущих чисел перед уничтожением активности
-        previousNumbersList.clear();
-    }
-public void test(View v){
-    connection.sendMasenger("st");//отправляю st
-}
+    private ArrayList<String> Pulse;
+    int Durabli=1000;
+    private ArrayList<String> Data;
+    private ArrayList<String> time;
+//астройка нажатия сердца
     public void Press_heart(View view) {
-       // connection.sendMasenger("st");//отправляю st
+        connection.sendMasenger("st");//отправляю st
         final ColorStateList originalColor = Button_heart.getImageTintList();
         Button_heart.setImageTintList(ColorStateList.valueOf(Color.BLACK));
         ProgressBar2.setVisibility(View.VISIBLE);
@@ -172,6 +153,7 @@ public void test(View v){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                ListItem1 list=new ListItem1();
                 Date currentDate = new Date();
                 DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
                 String dateText = dateFormat.format(currentDate);
@@ -183,29 +165,83 @@ public void test(View v){
                 Button_heart.setImageTintList(originalColor);
                 data.setText(dateText);
                 Time.setText(timeText);
-                now_number = String.valueOf(randomNumber);
-                Pulse_data.setText(now_number);
-
-                // Добавляем текущее число пульса в массив предыдущих чисел
-                previousNumbersList.add(now_number);
+                String text=connection.readMasenger();
+                if(!text.equals("ТИ ЛОХ"))
+                { Number_Pulse = text;}
+                else {
+                    Number_Pulse = String.valueOf(randomNumber);
+                }
+                Pulse_data.setText(Number_Pulse);
+                ////////////////////////////////
+                Pulse.add(Number_Pulse);
+                Data.add(dateText);
+                time.add(timeText);
+                ////////////////////////////////
+                list.setPulses(Pulse);
+                list.setData(Data);
+                list.setB_Time(time);
+                // Зберегти пульс, дату та час у SharedPreferences
+                DATE = getSharedPreferences("my_pulse_data", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = DATE.edit();
+                editor.putString(Sava_Pulse.Pulse, Number_Pulse);
+                editor.putString(Sava_Pulse.SData, dateText);
+                editor.putString(Sava_Pulse.STime, timeText);
+                editor.apply();
             }
-        }, 1000);
+        }, Durabli);
     }
 
+    private void init_p() {
+        DATE = getSharedPreferences("my_pulse_data", Context.MODE_PRIVATE);
+        Pulse_data.setText(DATE.getString(Sava_Pulse.Pulse,""));
+        data.setText(DATE.getString(Sava_Pulse.SData,""));
+        Time.setText(DATE.getString(Sava_Pulse.STime,""));
+    }
+
+    //Тест при нажатия должен отправить текст
+    public void test(View v){
+        Durabli=10000;
+        connection.sendMasenger("s1t");//отправляю st
+    }
+    public void test1(View v){
+        String text=connection.readMasenger();
+        static1.setText(text);
+    }
+
+
+    public void Blutooth_Click(View view) {
+        if (blueAdapt == null) {
+            Toast.makeText(this, "Bluetooth не підтримує", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!blueAdapt.isEnabled()) {
+            // Если Bluetooth выключен, включаем его
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            bluetoothEnableLauncher.launch(enableBtIntent);
+        } else {
+            Toast.makeText(this,"Мені лінь вимикать", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void Blutoth_Menu(View view) {
+        if(blueAdapt.isEnabled()){
+            Intent open = new Intent(MainActivity.this, Option_Blu.class);
+            startActivity(open);
+
+        }
+        else {
+            Toast.makeText(this, "Ввімкни Bluetooth NIGGER", Toast.LENGTH_SHORT).show();
+        }}
+
+    public void Bluetooth_Connection(View v){
+        connection.connect();
+    }
+    //Перейти в скрол
     public void NextPage(View v) {
-        // Сохраняем текущие значения перед переходом на следующую страницу
-        SharedPreferences sharedPrefs = getSharedPreferences(SHARED_PREFS_FILE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-        editor.putString(KEY_NUMBER, now_number);
-        editor.putString(KEY_DATA, data.getText().toString());
-        editor.putString(KEY_TIME, Time.getText().toString());
-        editor.putString("previous_numbers", TextUtils.join(",", previousNumbersList)); // Сохраняем историю чисел пульса
-
-        editor.apply();
-
-        // Передаем массив предыдущих чисел в ScrollingActivity через Intent
-        Intent intent = new Intent(this, ScrollingActivity.class);
-        intent.putStringArrayListExtra("previous_numbers", previousNumbersList);
+        Intent intent = new Intent(this,history_page.class);
+        intent.putExtra("pulseData", Pulse);
+        intent.putExtra("dateData", Data);
+        intent.putExtra("timeData", time);
         startActivity(intent);
     }
 }

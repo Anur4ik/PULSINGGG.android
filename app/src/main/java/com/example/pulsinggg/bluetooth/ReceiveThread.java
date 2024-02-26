@@ -7,52 +7,58 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ReceiveThread extends Thread{
-    private BluetoothSocket socket;
-    private InputStream inputS;
-    private OutputStream outputS;
-    private byte[] rBuffer;
-    public ReceiveThread(BluetoothSocket socket){
-        this.socket=socket;
-        try{
-            inputS=socket.getInputStream();
-        }catch (IOException e){
+public class ReceiveThread extends Thread {
+    private BluetoothSocket socket; // Об'єкт BluetoothSocket для зв'язку
+    private InputStream inputS; // InputStream для читання даних
+    private OutputStream outputS; // OutputStream для запису даних
+    private byte[] rBuffer; // Байтовий масив буфера для отриманих даних
 
-        }
-        try{
-            outputS=socket.getOutputStream();
-        }catch (IOException e){
-
-        }
-    }
-//ПРИНИМАЕМ С АРДУИНО
-public String readMesenger () {
-    rBuffer = new byte[10];
-    while (true) {
+    // Конструктор для ініціалізації ReceiveThread з BluetoothSocket
+    public ReceiveThread(BluetoothSocket socket) {
+        this.socket = socket;
         try {
-            int size = inputS.read(rBuffer);
-            String message = new String(rBuffer, 0, size);
-            Log.d("MyLog", "Message: " + message);
-            return message;
+            inputS = socket.getInputStream(); // Отримати InputStream з сокету
         } catch (IOException e) {
-            break;
+            // Обробити IOException, якщо не вдається отримати InputStream
+        }
+        try {
+            outputS = socket.getOutputStream(); // Отримати OutputStream з сокету
+        } catch (IOException e) {
+            // Обробити IOException, якщо не вдається отримати OutputStream
         }
     }
-    return null;
-}
+
+    // Метод для читання повідомлень з InputStream Bluetooth-сокету
+    public String readMesenger() {
+        rBuffer = new byte[10]; // Ініціалізувати буфер розміром 10
+        while (true) {
+            try {
+                int size = inputS.read(rBuffer); // Прочитати дані в буфер
+                String message = new String(rBuffer, 0, size); // Конвертувати байти в рядок
+                Log.d("MyLog", "Message: " + message); // Зареєструвати отримане повідомлення
+                return message; // Повернути отримане повідомлення
+            } catch (IOException e) {
+                // Обробити IOException, якщо виникає помилка під час читання
+                break;
+            }
+        }
+        return null; // Повернути null, якщо повідомлення не отримано
+    }
+
+    // Перевизначити метод run класу Thread
     @Override
     public void run() {
-        readMesenger();
+        readMesenger(); // Викликати метод readMesenger при старті потоку
     }
 
-//Отправка ардуино
-public void sendMesenger(byte[] byteArray){
-    try{
-        outputS.write(byteArray);
-    }catch (IOException e){
-
+    // Метод для відправлення повідомлень через OutputStream Bluetooth-сокету
+    public void sendMesenger(byte[] byteArray) {
+        try {
+            outputS.write(byteArray); // Записати байтовий масив у OutputStream
+        } catch (IOException e) {
+            // Обробити IOException, якщо виникає помилка під час запису
+        }
     }
-
 }
 
 
@@ -62,6 +68,3 @@ public void sendMesenger(byte[] byteArray){
 
 
 
-
-
-}

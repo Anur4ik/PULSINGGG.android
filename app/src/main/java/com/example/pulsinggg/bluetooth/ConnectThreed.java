@@ -7,53 +7,54 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.io.IOException;
 
 public class ConnectThreed extends Thread {
-    private Context context;
-    private BluetoothAdapter btadapt;
-    private BluetoothDevice device;
-    private BluetoothSocket socket;
-    private ReceiveThread receiveThread;
-    public static final String UUID = "00001101-0000-1000-8000-00805F9B34FB";
-
+    private Context context;// Контекст додатка
+    private BluetoothAdapter btadapt;// Адаптер Bluetooth
+    private BluetoothDevice device;// Пристрій Bluetooth
+    private BluetoothSocket socket; // Сокет Bluetooth
+    private ReceiveThread receiveThread;// Потік для отримання даних
+    public static final String UUID = "00001101-0000-1000-8000-00805F9B34FB";// UUID для з'єднання Bluetooth
+// Конструктор для ініціалізації об'єкту ConnectThreed з контекстом, адаптером та пристроєм Bluetooth
     public ConnectThreed(Context context, BluetoothAdapter btadapt, BluetoothDevice device) {
         this.context = context;
         this.btadapt = btadapt;
         this.device = device;
         try {
-            socket = device.createRfcommSocketToServiceRecord(java.util.UUID.fromString(UUID));
+            socket = device.createRfcommSocketToServiceRecord(java.util.UUID.fromString(UUID));// Створення Bluetooth сокету за UUID
         } catch (IOException e) {
         }
     }
-
+    // Метод run, який буде виконуватись при запуску потоку
     public void run() {
-        btadapt.cancelDiscovery();
+        btadapt.cancelDiscovery();// Відміна пошуку нових пристроїв Bluetooth
         try {
-            socket.connect();
-
-            receiveThread=new ReceiveThread(socket);
-            receiveThread.start();
+            socket.connect();// Встановлення з'єднання через сокет
+            receiveThread=new ReceiveThread(socket);// Створення потоку для отримання даних
+            receiveThread.start(); // Запуск потоку для отримання даних
             Log.d("Mylog", " Conect");
         } catch (IOException e) {
             Log.d("Mylog", "Not Conect");
-            closeConnection();
+            closeConnection();// Закрити з'єднання
         }
+
 
     }
 
 
-
+    // Метод для закриття з'єднання Bluetooth
     public void closeConnection() {
         try {
-            socket.close();
+            socket.close();// Закрити сокет
         } catch (IOException y) {
         }
     }
-    //НЕ РАБОТАЕТ
+    // Метод, який повертає потік для отримання даних
     public ReceiveThread getReceiveThread() {
-        return receiveThread;
+        return receiveThread; // Повернути потік для отримання даних
     }
 }
 
