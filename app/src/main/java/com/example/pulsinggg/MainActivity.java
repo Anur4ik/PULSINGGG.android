@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private  ReceiveThread receiveThread;
     ConstraintLayout lay;
     ImageButton Button_heart;
+    EditText numbe;
     ProgressBar ProgressBar2;
     ImageView Blutooth1;
     TextView Pulse_data;
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         checkBluetoothPermissions();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        numbe=findViewById(R.id.Number);
         lay = findViewById(R.id.lay);
         Button_heart = findViewById(R.id.Button_heart);
         Pulse_data = findViewById(R.id.Pulse_data);
@@ -140,11 +143,12 @@ private void init_list(){
         }
     }
     private ArrayList<String> Pulse;
-    int Durabli=1000;
+    int Durabli;
     private ArrayList<String> Data;
     private ArrayList<String> time;
 //астройка нажатия сердца
     public void Press_heart(View view) {
+        view.setEnabled(false);
         connection.sendMasenger("st");//отправляю st
         final ColorStateList originalColor = Button_heart.getImageTintList();
         Button_heart.setImageTintList(ColorStateList.valueOf(Color.BLACK));
@@ -187,6 +191,7 @@ private void init_list(){
                 editor.putString(Sava_Pulse.SData, dateText);
                 editor.putString(Sava_Pulse.STime, timeText);
                 editor.apply();
+                view.setEnabled(true);
             }
         }, Durabli);
     }
@@ -200,7 +205,7 @@ private void init_list(){
 
     //Тест при нажатия должен отправить текст
     public void test(View v){
-        Durabli=10000;
+        Durabli=Integer.parseInt(numbe.getText().toString());
         connection.sendMasenger("s1t");//отправляю st
     }
     public void test1(View v){

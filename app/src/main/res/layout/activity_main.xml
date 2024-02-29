@@ -248,4 +248,14 @@
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:srcCompat="@drawable/connector_png_photos" />
 
+    <EditText
+        android:id="@+id/Number"
+        android:layout_width="79dp"
+        android:layout_height="39dp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="0"
+        tools:layout_editor_absoluteX="-2dp"
+        tools:layout_editor_absoluteY="8dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
