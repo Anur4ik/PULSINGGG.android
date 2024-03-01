@@ -12,6 +12,7 @@ public class ReceiveThread extends Thread {
     private InputStream inputS; // InputStream для читання даних
     private OutputStream outputS; // OutputStream для запису даних
     private byte[] rBuffer; // Байтовий масив буфера для отриманих даних
+    String message ;
 
     // Конструктор для ініціалізації ReceiveThread з BluetoothSocket
     public ReceiveThread(BluetoothSocket socket) {
@@ -29,26 +30,23 @@ public class ReceiveThread extends Thread {
     }
 
     // Метод для читання повідомлень з InputStream Bluetooth-сокету
-    public String readMesenger() {
-        rBuffer = new byte[10]; // Ініціалізувати буфер розміром 10
-        while (true) {
-            try {
-                int size = inputS.read(rBuffer); // Прочитати дані в буфер
-                String message = new String(rBuffer, 0, size); // Конвертувати байти в рядок
-                Log.d("MyLog", "Message: " + message); // Зареєструвати отримане повідомлення
-                return message; // Повернути отримане повідомлення
-            } catch (IOException e) {
-                // Обробити IOException, якщо виникає помилка під час читання
-                break;
-            }
-        }
-        return null; // Повернути null, якщо повідомлення не отримано
-    }
+
 
     // Перевизначити метод run класу Thread
     @Override
     public void run() {
-        readMesenger(); // Викликати метод readMesenger при старті потоку
+        rBuffer = new byte[10]; // Ініціалізувати буфер розміром 10
+        while (true) {
+            try {
+                int size = inputS.read(rBuffer); // Прочитати дані в буфер
+                message = new String(rBuffer, 0, size); // Конвертувати байти в рядок
+                Log.d("MyLog", "Message: " + message); // Зареєструвати отримане повідомлення
+            } catch (IOException e) {
+                break;
+            }
+        }
+
+         // Викликати метод readMesenger при старті потоку
     }
 
     // Метод для відправлення повідомлень через OutputStream Bluetooth-сокету

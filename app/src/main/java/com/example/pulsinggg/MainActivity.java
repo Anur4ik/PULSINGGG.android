@@ -9,6 +9,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -84,6 +85,13 @@ public class MainActivity extends AppCompatActivity {
         Time = findViewById(R.id.Time);
         Blutooth1 = findViewById(R.id.Blutooth1);
         ProgressBar2 = findViewById(R.id.ProgressBar2);
+        lay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connection.sendMasenger("A");
+                Log.d("Mylog", "Message sent: A");
+            }
+        });
         init();
         init_list();
         setBtIcon();
@@ -149,7 +157,7 @@ private void init_list(){
 //астройка нажатия сердца
     public void Press_heart(View view) {
         view.setEnabled(false);
-        connection.sendMasenger("st");//отправляю st
+        connection.sendMasenger("1");//отправляю st
         final ColorStateList originalColor = Button_heart.getImageTintList();
         Button_heart.setImageTintList(ColorStateList.valueOf(Color.BLACK));
         ProgressBar2.setVisibility(View.VISIBLE);
@@ -238,8 +246,8 @@ private void init_list(){
             Toast.makeText(this, "Ввімкни Bluetooth NIGGER", Toast.LENGTH_SHORT).show();
         }}
 
-    public void Bluetooth_Connection(View v){
-        connection.connect();
+    public void Bluetooth_Connection(View v){connection.connect();
+
     }
     //Перейти в скрол
     public void NextPage(View v) {

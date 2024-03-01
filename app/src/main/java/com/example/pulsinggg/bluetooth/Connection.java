@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.pulsinggg.adapter.BtConst;
 
@@ -33,13 +34,14 @@ public class Connection {
     // Метод для відправлення повідомлення через з'єднання Bluetooth
     public void sendMasenger(String message){
         if (connectThreed != null) {// Перевірити, чи існує активне з'єднання
-            connectThreed.getReceiveThread().sendMesenger(message.getBytes());// Відправити повідомлення через активне з'єднання
+            connectThreed.getReceiveThread().sendMesenger(message.getBytes());
+            Log.d("Mylog", "Message sent: " + message); // Відправити повідомлення через активне з'єднання
         }}
     // Не працює
     // Метод для читання отриманого повідомлення через з'єднання Bluetooth
     public String readMasenger(){
-        if (connectThreed != null && connectThreed.getReceiveThread() != null) {// Перевірити, чи існує активне з'єднання та потік для отримання даних
-            return connectThreed.getReceiveThread().readMesenger();// Повернути отримане повідомлення через активне з'єднання
+        if (connectThreed != null) {// Перевірити, чи існує активне з'єднання та потік для отримання даних
+            return connectThreed.getReceiveThread().message;// Повернути отримане повідомлення через активне з'єднання
         }
         return "ТИ ЛОХ";//  Повернути null у випадку відсутності активного з'єднання або прочитання повідомлення
     }

@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -36,12 +38,22 @@ public class ConnectThreed extends Thread {
             receiveThread=new ReceiveThread(socket);// Створення потоку для отримання даних
             receiveThread.start(); // Запуск потоку для отримання даних
             Log.d("Mylog", " Conect");
+            showUIToast("Подключение успешно выполнено");
         } catch (IOException e) {
             Log.d("Mylog", "Not Conect");
+            showUIToast("Подключение не выполнено");
             closeConnection();// Закрити з'єднання
         }
 
 
+    }   private void showUIToast(final String message) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
