@@ -1,13 +1,18 @@
 package com.example.pulsinggg.bluetooth;
 
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ReceiveThread extends Thread {
+public class ReceiveThread extends Thread{
+        private Context context;
     private BluetoothSocket socket; // Об'єкт BluetoothSocket для зв'язку
     private InputStream inputS; // InputStream для читання даних
     private OutputStream outputS; // OutputStream для запису даних
@@ -41,6 +46,7 @@ public class ReceiveThread extends Thread {
                 int size = inputS.read(rBuffer); // Прочитати дані в буфер
                 message = new String(rBuffer, 0, size); // Конвертувати байти в рядок
                 Log.d("MyLog", "Message: " + message); // Зареєструвати отримане повідомлення
+
             } catch (IOException e) {
                 break;
             }

@@ -39,6 +39,7 @@ import com.example.pulsinggg.bluetooth.Connection;
 import com.example.pulsinggg.bluetooth.ReceiveThread;
 
 public class MainActivity extends AppCompatActivity {
+
     private static final int REQUEST_ENABLE_BT = 1;
     private final int ENABLE_REQUEST = 15;
     private BluetoothAdapter blueAdapt;
