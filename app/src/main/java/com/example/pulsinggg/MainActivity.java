@@ -44,13 +44,14 @@ public class MainActivity extends AppCompatActivity {
     private final int ENABLE_REQUEST = 15;
     private BluetoothAdapter blueAdapt;
     private Connection connection;
-    private  ReceiveThread receiveThread;
+    private ReceiveThread receiveThread;
     ConstraintLayout lay;
     ImageButton Button_heart;
     EditText numbe;
     ProgressBar ProgressBar2;
     ImageView Blutooth1;
     TextView Pulse_data;
+    TextView textView2;
     TextView data;
     TextView Time;
     TextView static1;
@@ -81,18 +82,13 @@ public class MainActivity extends AppCompatActivity {
         lay = findViewById(R.id.lay);
         Button_heart = findViewById(R.id.Button_heart);
         Pulse_data = findViewById(R.id.Pulse_data);
+        textView2 = findViewById(R.id.textView2);
         data = findViewById(R.id.data);
         static1= findViewById(R.id.statis1);
         Time = findViewById(R.id.Time);
         Blutooth1 = findViewById(R.id.Blutooth1);
         ProgressBar2 = findViewById(R.id.ProgressBar2);
-        lay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                connection.sendMasenger("A");
-                Log.d("Mylog", "Message sent: A");
-            }
-        });
+
         init();
         init_list();
         setBtIcon();
@@ -127,11 +123,11 @@ public class MainActivity extends AppCompatActivity {
         connection=new Connection(this);
 
     }
-private void init_list(){
-    Pulse = new ArrayList<>();
-    Data = new ArrayList<>();
-    time = new ArrayList<>();
-}
+    private void init_list(){
+        Pulse = new ArrayList<>();
+        Data = new ArrayList<>();
+        time = new ArrayList<>();
+    }
 
 
     private void setBtIcon() {
@@ -152,13 +148,13 @@ private void init_list(){
         }
     }
     private ArrayList<String> Pulse;
-    int Durabli;
+    int Durabli=3000;
     private ArrayList<String> Data;
     private ArrayList<String> time;
-//астройка нажатия сердца
+    //астройка нажатия сердца
     public void Press_heart(View view) {
         view.setEnabled(false);
-        connection.sendMasenger("1");//отправляю st
+        connection.sendMasenger("A");
         final ColorStateList originalColor = Button_heart.getImageTintList();
         Button_heart.setImageTintList(ColorStateList.valueOf(Color.BLACK));
         ProgressBar2.setVisibility(View.VISIBLE);
@@ -166,6 +162,7 @@ private void init_list(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 ListItem1 list=new ListItem1();
                 Date currentDate = new Date();
                 DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
@@ -179,7 +176,7 @@ private void init_list(){
                 data.setText(dateText);
                 Time.setText(timeText);
                 String text=connection.readMasenger();
-                if(!text.equals("ТИ ЛОХ"))
+                if(!text.equals("Лох"))
                 { Number_Pulse = text;}
                 else {
                     Number_Pulse = String.valueOf(randomNumber);
@@ -215,11 +212,6 @@ private void init_list(){
     //Тест при нажатия должен отправить текст
     public void test(View v){
         Durabli=Integer.parseInt(numbe.getText().toString());
-        connection.sendMasenger("s1t");//отправляю st
-    }
-    public void test1(View v){
-        String text=connection.readMasenger();
-        static1.setText(text);
     }
 
 
@@ -259,4 +251,3 @@ private void init_list(){
         startActivity(intent);
     }
 }
-

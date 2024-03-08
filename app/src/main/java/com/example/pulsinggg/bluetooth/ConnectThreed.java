@@ -14,15 +14,13 @@ import android.widget.Toast;
 import java.io.IOException;
 
 public class ConnectThreed extends Thread {
-    private Context context;// Контекст додатка
     private BluetoothAdapter btadapt;// Адаптер Bluetooth
     private BluetoothDevice device;// Пристрій Bluetooth
     private BluetoothSocket socket; // Сокет Bluetooth
     private ReceiveThread receiveThread;// Потік для отримання даних
     public static final String UUID = "00001101-0000-1000-8000-00805F9B34FB";// UUID для з'єднання Bluetooth
 // Конструктор для ініціалізації об'єкту ConnectThreed з контекстом, адаптером та пристроєм Bluetooth
-    public ConnectThreed(Context context, BluetoothAdapter btadapt, BluetoothDevice device) {
-        this.context = context;
+    public ConnectThreed(BluetoothAdapter btadapt, BluetoothDevice device) {
         this.btadapt = btadapt;
         this.device = device;
         try {
@@ -36,25 +34,16 @@ public class ConnectThreed extends Thread {
         try {
             socket.connect();// Встановлення з'єднання через сокет
             receiveThread=new ReceiveThread(socket);// Створення потоку для отримання даних
-            receiveThread.start(); // Запуск потоку для отримання даних
+            receiveThread.start();
             Log.d("Mylog", " Conect");
-            showUIToast("Подключение успешно выполнено");
         } catch (IOException e) {
             Log.d("Mylog", "Not Conect");
-            showUIToast("Подключение не выполнено");
             closeConnection();// Закрити з'єднання
         }
 
 
-    }   private void showUIToast(final String message) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
+
 
 
     // Метод для закриття з'єднання Bluetooth
